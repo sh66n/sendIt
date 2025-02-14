@@ -9,16 +9,19 @@ const upload = multer({ storage: storage });
 
 const { transporter, sendMail } = require("./sendMail");
 
+app.use(express.static(path.join(__dirname, "public")));
+
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
-app.post("/send-email", upload.single("file"), async (req, res) => {
+app.post("/send-email", upload.array("files", 10), async (req, res) => {
   console.log(req.body);
+  console.log(req.files);
 
   //if no files, return early
-  if (!req.file) {
-    return res.status(400).send("No file uploaded");
+  if (!req.files || req.files.length === 0) {
+    return res.status(400).send("No files uploaded");
   }
 
   //configure mail options (who to send? etc)
@@ -29,23 +32,17 @@ app.post("/send-email", upload.single("file"), async (req, res) => {
     },
     to: [req.body.email], // list of receivers
     subject: "Your SendIt file is here!",
-    text: "Here is the file you requested.",
-    attachments: [
-      {
-        filename: req.file.originalname, // Get the original name of the uploaded file
-        content: req.file.buffer, // The file content is available in the buffer
-        encoding: "base64", // Specify encoding (base64 is common for files)
-      },
-    ],
+    text: "Here are the files you requested.",
+    attachments: req.files.map((file) => ({
+      filename: file.originalname,
+      content: file.buffer,
+      encoding: "base64",
+    })),
   };
 
   //finally send the mail
   const response = await sendMail(transporter, mailOptions);
-  if (response) {
-    res.send(response.message);
-  } else {
-    res.send("Something went wrong");
-  }
+  res.send(response);
 });
 
 app.listen(port, () => {
