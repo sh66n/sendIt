@@ -16,9 +16,6 @@ app.get("/", (req, res) => {
 });
 
 app.post("/send-email", upload.array("files", 10), async (req, res) => {
-  console.log(req.body);
-  console.log(req.files);
-
   //if no files, return early
   if (!req.files || req.files.length === 0) {
     return res.status(400).send("No files uploaded");
@@ -31,7 +28,7 @@ app.post("/send-email", upload.array("files", 10), async (req, res) => {
       address: process.env.USER_MAIL,
     },
     to: [req.body.email], // list of receivers
-    subject: "Your SendIt file is here!",
+    subject: "Your SendIt files are here!",
     text: "Here are the files you requested.",
     attachments: req.files.map((file) => ({
       filename: file.originalname,
