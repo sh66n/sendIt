@@ -7,7 +7,7 @@ const multer = require("multer");
 const storage = multer.memoryStorage(); // Store file in memory (not on disk)
 const upload = multer({ storage: storage });
 
-const { transporter, sendMail } = require("./sendMail");
+const { transporter, sendMail } = require("../sendMail");
 
 app.use(express.static(path.join(__dirname, "public")));
 
