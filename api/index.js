@@ -12,7 +12,7 @@ const { transporter, sendMail } = require("../sendMail");
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "index.html"));
+  res.sendFile(path.join(__dirname, "../index.html"));
 });
 
 app.post("/send-email", upload.array("files", 10), async (req, res) => {
