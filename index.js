@@ -7,12 +7,12 @@ const multer = require("multer");
 const storage = multer.memoryStorage(); // Store file in memory (not on disk)
 const upload = multer({ storage: storage });
 
-const { transporter, sendMail } = require("../sendMail");
+const { transporter, sendMail } = require("./sendMail");
 
 app.use(express.static(path.join(__dirname, "public"))); // Serve static files
 
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../index.html"));
+  res.sendFile(path.join(__dirname, "index.html"));
 });
 
 app.post("/send-email", upload.array("files", 10), async (req, res) => {
