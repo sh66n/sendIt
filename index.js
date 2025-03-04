@@ -9,6 +9,7 @@ const upload = multer({ storage: storage });
 
 const { transporter, sendMail } = require("./sendMail");
 
+app.use(express.static(path.join(__dirname, "/")));
 app.use(express.static(path.join(__dirname, "public"))); // Serve static files
 
 app.get("/", (req, res) => {
